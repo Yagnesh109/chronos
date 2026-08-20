@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface-card border border-surface-border rounded-2xl shadow-xl shadow-black/20;
+  }
+  .card-header {
+    @apply px-5 sm:px-6 py-4 border-b border-surface-border flex items-center justify-between;
+  }
+  .card-body {
+    @apply px-5 sm:px-6 py-5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-chronos-600 hover:bg-chronos-500 text-white shadow-lg shadow-chronos-600/25 hover:shadow-chronos-500/40;
+  }
+  .btn-secondary {
+    @apply btn bg-surface-border hover:bg-surface-muted text-slate-200;
+  }
+  .btn-ghost {
+    @apply btn hover:bg-surface-border text-slate-300 hover:text-white;
+  }
+  .btn-danger {
+    @apply btn bg-red-600/90 hover:bg-red-500 text-white shadow-lg shadow-red-600/20;
+  }
+  .input {
+    @apply w-full bg-surface-dark border border-surface-border rounded-xl px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-chronos-500 focus:ring-2 focus:ring-chronos-500/20 transition-all;
+  }
+  .label {
+    @apply block text-sm font-medium text-slate-300 mb-1.5;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
