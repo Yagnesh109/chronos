@@ -14,18 +14,20 @@ export default function Header({
   onLogout,
   onOpenSession,
   onOpenSettings,
+  agentStatusLabel,
 }) {
   const syncStyles = {
-    [SyncStatus.SYNCED]: { dot: 'bg-emerald-500', label: 'text-emerald-400', text: 'Synced' },
-    [SyncStatus.SYNCING]: { dot: 'bg-amber-400 animate-pulse-slow', label: 'text-amber-400', text: 'Syncing' },
-    [SyncStatus.OFFLINE]: { dot: 'bg-slate-500', label: 'text-slate-400', text: 'Offline' },
-    [SyncStatus.ERROR]: { dot: 'bg-red-500', label: 'text-red-400', text: 'Error' },
+    [SyncStatus.SYNCED]: { dot: 'bg-emerald-500', label: 'text-emerald-600 dark:text-emerald-400', text: 'Synced' },
+    [SyncStatus.SYNCING]: { dot: 'bg-amber-400 animate-pulse-slow', label: 'text-amber-600 dark:text-amber-400', text: 'Syncing' },
+    [SyncStatus.OFFLINE]: { dot: 'bg-amber-500', label: 'text-amber-600 dark:text-amber-400', text: 'Offline Buffered' },
+    [SyncStatus.ERROR]: { dot: 'bg-red-500', label: 'text-red-600 dark:text-red-400', text: 'Sync Failure' },
   }
 
   const sync = syncStyles[syncStatus] || syncStyles[SyncStatus.OFFLINE]
+  const statusText = agentStatusLabel || (trackingActive ? 'Chronos: Active — Working Hours Mode' : 'Chronos: Paused')
 
   return (
-    <header className="bg-surface-dark border-b border-surface-border sticky top-0 z-40 backdrop-blur-sm bg-surface-dark/95">
+    <header className="sticky top-0 z-40 border-b border-surface-light-border bg-white/95 backdrop-blur-sm dark:border-surface-border dark:bg-surface-dark/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
@@ -37,18 +39,20 @@ export default function Header({
               </svg>
             </div>
             <div className="min-w-0">
-              <h1 className="text-lg font-bold tracking-tight text-white truncate">Chronos</h1>
-              <p className="text-[11px] text-slate-400 leading-none truncate">Work Session Tracker</p>
+              <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white truncate">Chronos</h1>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-none truncate" title={statusText}>
+                {statusText}
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
-            <span className={`badge ${trackingActive ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-slate-700/50 text-slate-400 border border-slate-600/40'}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${trackingActive ? 'bg-emerald-400 animate-pulse' : 'bg-slate-500'}`} />
-              {trackingActive ? 'Tracking' : 'Idle'}
+            <span className={`badge ${trackingActive ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30' : 'bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-700/50 dark:text-slate-400 dark:border-slate-600/40'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${trackingActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+              {trackingActive ? 'Tracking' : operationalMode === 'off' ? 'Stopped' : 'Idle'}
             </span>
 
-            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-card/60 border border-surface-border">
+            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 dark:bg-surface-card/60 dark:border-surface-border">
               <span className={`w-2 h-2 rounded-full ${sync.dot} ${syncStatus === SyncStatus.SYNCING ? 'animate-ping-slow' : ''}`} />
               <span className={`text-xs font-medium ${sync.label}`}>{sync.text}</span>
             </div>
@@ -107,12 +111,12 @@ export default function Header({
               )}
             </button>
 
-            <span className="w-px h-5 bg-surface-border mx-1" />
+            <span className="w-px h-5 bg-slate-200 dark:bg-surface-border mx-1" />
 
             <button
               type="button"
               onClick={onLogout}
-              className="btn-ghost w-9 h-9 !p-0 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
+              className="btn-ghost w-9 h-9 !p-0 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10"
               title="Logout"
               aria-label="Logout"
             >

@@ -13,9 +13,9 @@ const variantConfig = {
     ring: 'ring-amber-500/10',
     icon: 'text-amber-500',
     iconBg: 'bg-amber-500/10',
-    title: 'text-amber-300',
+    title: 'text-amber-800 dark:text-amber-300',
     progress: 'bg-amber-500',
-    badge: 'bg-amber-500/20 text-amber-300 border border-amber-500/30',
+    badge: 'bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/30',
   },
   [AlertKind.SYNC_FAILED]: {
     accent: 'red',
@@ -24,9 +24,9 @@ const variantConfig = {
     ring: 'ring-red-500/10',
     icon: 'text-red-500',
     iconBg: 'bg-red-500/10',
-    title: 'text-red-300',
+    title: 'text-red-800 dark:text-red-300',
     progress: 'bg-red-500',
-    badge: 'bg-red-500/20 text-red-300 border border-red-500/30',
+    badge: 'bg-red-100 text-red-800 border border-red-200 dark:bg-red-500/20 dark:text-red-300 dark:border-red-500/30',
   },
   [AlertKind.IDLE_WARNING]: {
     accent: 'blue',
@@ -35,9 +35,9 @@ const variantConfig = {
     ring: 'ring-blue-500/10',
     icon: 'text-blue-500',
     iconBg: 'bg-blue-500/10',
-    title: 'text-blue-300',
+    title: 'text-sky-800 dark:text-blue-300',
     progress: 'bg-blue-500',
-    badge: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
+    badge: 'bg-sky-100 text-sky-800 border border-sky-200 dark:bg-blue-500/20 dark:text-blue-300 dark:border-blue-500/30',
   },
   [AlertKind.UPDATE_AVAILABLE]: {
     accent: 'green',
@@ -46,9 +46,9 @@ const variantConfig = {
     ring: 'ring-green-500/10',
     icon: 'text-green-500',
     iconBg: 'bg-green-500/10',
-    title: 'text-green-300',
+    title: 'text-emerald-800 dark:text-green-300',
     progress: 'bg-green-500',
-    badge: 'bg-green-500/20 text-green-300 border border-green-500/30',
+    badge: 'bg-emerald-100 text-emerald-800 border border-emerald-200 dark:bg-green-500/20 dark:text-green-300 dark:border-green-500/30',
   },
 }
 
@@ -94,7 +94,7 @@ const iconFor = (kind) => {
 const titleFor = (kind) => {
   switch (kind) {
     case AlertKind.STORAGE_FULL:
-      return 'Storage almost full'
+      return 'Local storage full'
     case AlertKind.SYNC_FAILED:
       return 'Sync failed'
     case AlertKind.IDLE_WARNING:
@@ -109,7 +109,7 @@ const titleFor = (kind) => {
 const actionLabelFor = (kind) => {
   switch (kind) {
     case AlertKind.STORAGE_FULL:
-      return 'Upgrade Plan'
+      return 'Connect to sync'
     case AlertKind.SYNC_FAILED:
       return 'Retry'
     case AlertKind.IDLE_WARNING:
@@ -165,7 +165,7 @@ export default function NotificationAlert({
   switch (kind) {
     case AlertKind.STORAGE_FULL: {
       const pct = typeof storageUsedPct === 'number' ? storageUsedPct : 0
-      body = `${pct}% of your storage is used. Upgrade or clear old data.`
+      body = `${pct}% of offline cache used. Local storage full. Connect to network to sync records.`
       break
     }
     case AlertKind.SYNC_FAILED:
@@ -210,7 +210,7 @@ export default function NotificationAlert({
               {badgeLabel}
             </span>
           </div>
-          <p className="text-sm text-slate-400 mb-3">
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
             {body}
           </p>
 

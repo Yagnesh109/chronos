@@ -65,10 +65,10 @@ export default function IdleTimeoutModal({
             </svg>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
             You appear to be idle
           </h2>
-          <p className="text-sm text-slate-400 mb-6">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
             Activity has not been detected for over {minutes} minutes.
           </p>
 
@@ -79,7 +79,7 @@ export default function IdleTimeoutModal({
                 cy="80"
                 r={radius}
                 fill="none"
-                stroke="#1f2937"
+                className="stroke-slate-200 dark:stroke-[#1f2937]"
                 strokeWidth="10"
               />
               <circle
@@ -102,18 +102,18 @@ export default function IdleTimeoutModal({
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-5xl font-bold text-white tabular-nums">
+              <span className="text-5xl font-bold text-slate-900 dark:text-white tabular-nums">
                 {remaining}
               </span>
-              <span className="text-xs text-slate-400 uppercase tracking-wider mt-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">
                 seconds
               </span>
             </div>
           </div>
 
-          <p className="text-sm text-slate-300 mb-6">
-            Your session will be marked as idle in{' '}
-            <span className="font-semibold text-amber-400">{remaining}</span> seconds.
+          <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">
+            IDLE_DETECTED · PROMPT_WITH_TIMEOUT. Marked idle in{' '}
+            <span className="font-semibold text-amber-600 dark:text-amber-400">{remaining}</span> seconds.
           </p>
 
           <div className="w-full grid grid-cols-3 gap-2 sm:gap-3">

@@ -28,6 +28,9 @@ export default {
           card: '#111827',
           border: '#1f2937',
           muted: '#374151',
+          light: '#f4f6fb',
+          'light-card': '#ffffff',
+          'light-border': '#e2e8f0',
         },
       },
       animation: {

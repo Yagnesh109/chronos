@@ -19,11 +19,15 @@ export default function ScreenshotsGallery({ blurPx = 20 }) {
   return (
     <div className="card">
       <div className="card-header">
-        <h3 className="text-lg font-semibold text-white">Screenshots</h3>
+        <div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Blurred screen previews</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Client-side Gaussian blur r={blurPx}px · HMAC checksum · never stored raw</p>
+        </div>
         <div className="flex items-center gap-3">
+          <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">{blurred ? 'Blur on' : 'Preview (demo)'}</span>
           <button
             onClick={() => setBlurred((v) => !v)}
-            className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors bg-surface-muted hover:bg-surface-muted/80 focus:outline-none focus:ring-2 focus:ring-chronos-500/40"
+            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-chronos-500/40 ${blurred ? 'bg-chronos-600' : 'bg-slate-300 dark:bg-surface-muted'}`}
             aria-pressed={blurred}
           >
             <span
@@ -32,12 +36,6 @@ export default function ScreenshotsGallery({ blurPx = 20 }) {
               }`}
             />
           </button>
-          <a
-            href="#"
-            className="text-sm font-medium text-chronos-400 hover:text-chronos-300 transition-colors"
-          >
-            View all
-          </a>
         </div>
       </div>
       <div className="card-body">
@@ -45,14 +43,8 @@ export default function ScreenshotsGallery({ blurPx = 20 }) {
           {timestamps.map((ts, i) => (
             <div
               key={i}
-              className="group relative aspect-video rounded-xl overflow-hidden border border-surface-border bg-surface-dark cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-chronos-600/10 hover:border-chronos-500/50"
+              className="group relative aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-surface-border bg-slate-100 dark:bg-surface-dark cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-chronos-400"
             >
-              <div
-                className="absolute inset-0 bg-gradient-to-br opacity-90"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, rgba(99,102,241,0.15), transparent), repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 10px)`,
-                }}
-              />
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${gradients[i]} opacity-70`}
                 style={{ filter: blurred ? `blur(${blurPx}px)` : 'none', transform: 'scale(1.1)' }}
@@ -76,7 +68,6 @@ export default function ScreenshotsGallery({ blurPx = 20 }) {
                   {ts}
                 </span>
               </div>
-              <div className="absolute inset-0 bg-chronos-500/0 group-hover:bg-chronos-500/5 transition-colors pointer-events-none" />
             </div>
           ))}
         </div>
