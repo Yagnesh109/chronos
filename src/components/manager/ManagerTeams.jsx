@@ -6,10 +6,10 @@ const ManagerTeams = () => (
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       {[
-        { n: 'Engineering', head: 'Michael Chen', count: 38, hours: '1,386h', score: 88, apps: ['code.exe','idea64.exe','docker','postman'], col: 'chronos' },
-        { n: 'Product & Design', head: 'Priya Patel', count: 14, hours: '498h', score: 82, apps: ['figma.exe','miro','notion','chrome'], col: 'violet' },
-        { n: 'Go-to-Market', head: 'Laura Martinez', count: 26, hours: '904h', score: 71, apps: ['slack','hubspot','chrome','zoom'], col: 'emerald' },
-        { n: 'Operations', head: 'David Park', count: 12, hours: '412h', score: 76, apps: ['excel','outlook','chrome','jira'], col: 'sky' },
+        { n: 'Engineering', head: 'Michael Chen', count: 38, hours: '1,386h', meetings: '212h', focus: 88, score: 84, apps: ['code.exe','idea64.exe','docker','postman'], col: 'chronos' },
+        { n: 'Product & Design', head: 'Priya Patel', count: 14, hours: '498h', meetings: '76h', focus: 82, score: 78, apps: ['figma.exe','miro','notion','chrome'], col: 'violet' },
+        { n: 'Go-to-Market', head: 'Laura Martinez', count: 26, hours: '904h', meetings: '132h', focus: 71, score: 68, apps: ['slack','hubspot','chrome','zoom'], col: 'emerald' },
+        { n: 'Operations', head: 'David Park', count: 12, hours: '412h', meetings: '60h', focus: 76, score: 73, apps: ['excel','outlook','chrome','jira'], col: 'sky' },
       ].map((t) => (
         <div key={t.n} className="card overflow-hidden">
           <div className={`h-1.5 w-full bg-gradient-to-r ${t.col === 'chronos' ? 'from-chronos-500 to-sky-400' : t.col === 'violet' ? 'from-violet-500 to-fuchsia-400' : t.col === 'emerald' ? 'from-emerald-500 to-teal-400' : 'from-sky-500 to-cyan-400'}`} />
@@ -31,11 +31,11 @@ const ManagerTeams = () => (
               </div>
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-surface-dark/50">
                 <div className="text-xs text-slate-500 dark:text-slate-400">Meetings</div>
-                <div className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">212h</div>
+                <div className="text-sm font-bold text-slate-900 dark:text-white mt-0.5">{t.meetings}</div>
               </div>
               <div className="p-3 rounded-xl bg-slate-50 dark:bg-surface-dark/50">
                 <div className="text-xs text-slate-500 dark:text-slate-400">Focus</div>
-                <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">68%</div>
+                <div className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">{t.focus}%</div>
               </div>
             </div>
             <div className="mt-5">

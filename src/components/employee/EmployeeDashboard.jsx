@@ -1,8 +1,8 @@
 import Header, { SyncStatus } from '../shared/Header.jsx'
 import ActiveTimeMetrics from './ActiveTimeMetrics.jsx'
 import ProductivityBreakdown from './ProductivityBreakdown.jsx'
-import ScreenshotsGallery from './ScreenshotsGallery.jsx'
-import NotificationAlert, { AlertKind } from './NotificationAlert.jsx'
+import WeekActivityCard from './WeekActivityCard.jsx'
+import PrivacyStatusCard from './PrivacyStatusCard.jsx'
 import { OperationalMode } from './SessionControlPanel.jsx'
 
 const fsmChip = (paused, tracking, mode, syncStatus) => {
@@ -30,9 +30,6 @@ export default function EmployeeDashboard({
   onToggleDark,
   onLogout,
   onOpenSession,
-  storageAlert,
-  onDismissStorage,
-  onSyncNow,
   onPause,
   onResume,
   onStartStop,
@@ -55,21 +52,10 @@ export default function EmployeeDashboard({
         darkMode={dark}
         onToggleDarkMode={onToggleDark}
         onLogout={onLogout}
-        onOpenSession={onOpenSession}
-        onOpenSettings={onOpenSession}
         agentStatusLabel={agentStatusLabel}
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 space-y-5 sm:space-y-6">
-        {storageAlert && (
-          <NotificationAlert
-            kind={AlertKind.STORAGE_FULL}
-            storageUsedPct={92}
-            onDismiss={onDismissStorage}
-            onAction={onSyncNow}
-          />
-        )}
-
         <div className="card p-4 sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
@@ -95,12 +81,17 @@ export default function EmployeeDashboard({
               {operationalMode === OperationalMode.STRICT && (
                 <span className="text-xs text-slate-500 dark:text-slate-400">Local pause disabled by policy</span>
               )}
+              <button type="button" className="btn-secondary" onClick={onOpenSession}>
+                Session settings
+              </button>
               <button type="button" className="btn-ghost text-xs" onClick={onSimulateIdle}>
                 Simulate idle
               </button>
             </div>
           </div>
         </div>
+
+        <WeekActivityCard />
 
         <div className="card">
           <div className="card-header">
@@ -126,7 +117,7 @@ export default function EmployeeDashboard({
           <ProductivityBreakdown values={{ productive: 178, neutral: 72, unproductive: 34, uncategorized: 76 }} />
         </div>
 
-        <ScreenshotsGallery blurPx={20} />
+        <PrivacyStatusCard />
       </main>
     </>
   )

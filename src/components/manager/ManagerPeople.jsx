@@ -1,13 +1,13 @@
 const ManagerPeople = () => {
   const people = [
-    { n: 'Sarah Johnson', r: 'ADMIN', d: 'IT', h: 38.4, f: 91, p: 88, s: 'Active' },
-    { n: 'Michael Chen', r: 'MANAGER', d: 'Engineering', h: 36.1, f: 86, p: 84, s: 'Active' },
-    { n: 'Priya Patel', r: 'MANAGER', d: 'Design', h: 34.2, f: 83, p: 81, s: 'Active' },
     { n: 'Emily Davis', r: 'EMPLOYEE', d: 'Design', h: 35.0, f: 88, p: 85, s: 'Active' },
-    { n: 'James Wilson', r: 'EMPLOYEE', d: 'Engineering', h: 27.6, f: 72, p: 68, s: 'Idle' },
-    { n: 'Alex Thompson', r: 'EMPLOYEE', d: 'Marketing', h: 22.8, f: 61, p: 58, s: 'Offline' },
-    { n: 'Laura Martinez', r: 'MANAGER', d: 'GTM', h: 32.0, f: 75, p: 72, s: 'Active' },
+    { n: 'Grace Liu', r: 'EMPLOYEE', d: 'Engineering', h: 37.2, f: 86, p: 84, s: 'Active' },
+    { n: 'Priya Patel', r: 'MANAGER', d: 'Design', h: 34.2, f: 83, p: 81, s: 'Active' },
+    { n: 'Hana Suzuki', r: 'EMPLOYEE', d: 'Engineering', h: 33.8, f: 80, p: 77, s: 'Active' },
     { n: 'David Park', r: 'EMPLOYEE', d: 'Ops', h: 30.4, f: 80, p: 77, s: 'Active' },
+    { n: 'Laura Martinez', r: 'MANAGER', d: 'GTM', h: 32.0, f: 75, p: 72, s: 'Active' },
+    { n: 'James Wilson', r: 'EMPLOYEE', d: 'Engineering', h: 27.6, f: 71, p: 66, s: 'Idle' },
+    { n: 'Alex Thompson', r: 'EMPLOYEE', d: 'Marketing', h: 22.8, f: 61, p: 58, s: 'Offline' },
   ]
   return (
     <div className="space-y-6">

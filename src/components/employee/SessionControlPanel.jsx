@@ -28,8 +28,8 @@ const modeOptions = [
   },
   {
     value: OperationalMode.OFF,
-    label: 'Session closed',
-    hint: 'Hooks unmounted · buffer flushed',
+    label: 'Close session',
+    hint: 'Stop all tracking now · buffer is flushed and kept',
     color: 'slate',
   },
 ]
@@ -39,74 +39,47 @@ const colorMap = {
     ring: 'ring-chronos-500/40',
     border: 'border-chronos-500',
     bg: 'bg-chronos-50 dark:bg-chronos-500/10',
-    text: 'text-chronos-600 dark:text-chronos-400',
     dot: 'bg-chronos-500',
   },
   rose: {
     ring: 'ring-rose-500/40',
     border: 'border-rose-500',
     bg: 'bg-rose-50 dark:bg-rose-500/10',
-    text: 'text-rose-600 dark:text-rose-400',
     dot: 'bg-rose-500',
   },
   emerald: {
     ring: 'ring-emerald-500/40',
     border: 'border-emerald-500',
     bg: 'bg-emerald-50 dark:bg-emerald-500/10',
-    text: 'text-emerald-600 dark:text-emerald-400',
     dot: 'bg-emerald-500',
   },
   slate: {
     ring: 'ring-slate-400/40',
     border: 'border-slate-400',
     bg: 'bg-slate-50 dark:bg-slate-500/10',
-    text: 'text-slate-500 dark:text-slate-400',
     dot: 'bg-slate-400',
   },
 }
 
-function Switch({ checked, onChange, disabled = false }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      disabled={disabled}
-      onClick={() => !disabled && onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-chronos-500/40 ${
-        disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-      } ${checked ? 'bg-chronos-600' : 'bg-slate-300 dark:bg-surface-muted'}`}
-    >
-      <span
-        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ${
-          checked ? 'translate-x-5' : 'translate-x-0.5'
-        }`}
-      />
-    </button>
-  )
-}
+const policyItems = [
+  'Idle detection after 5 minutes without input',
+  'Screenshots every 10 minutes — blurred on your device',
+  'Working hours enforced 08:00 – 18:00 (Mon–Fri)',
+  'Recorded data syncs every 60 seconds',
+]
 
 export default function SessionControlPanel({
   open,
   onClose,
   initialMode,
-  initialTracking,
-  initialPaused,
   onApply,
 }) {
   const [mode, setMode] = useState(initialMode)
-  const [tracking, setTracking] = useState(initialTracking)
-  const [paused, setPaused] = useState(initialPaused)
-  const [idleSeconds, setIdleSeconds] = useState(300)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (open) {
-      setMode(initialMode)
-      setTracking(initialTracking)
-      setPaused(initialPaused)
-    }
-  }, [open, initialMode, initialTracking, initialPaused])
+    if (open) setMode(initialMode)
+  }, [open, initialMode])
 
   useEffect(() => {
     if (open) {
@@ -126,16 +99,8 @@ export default function SessionControlPanel({
 
   if (!open) return null
 
-  const isOff = mode === OperationalMode.OFF
-  const isStrict = mode === OperationalMode.STRICT
-  const pauseLocked = isOff || isStrict
-
   const handleApply = () => {
-    onApply({
-      tracking: isOff ? false : isStrict ? true : tracking,
-      paused: pauseLocked ? false : paused,
-      mode,
-    })
+    onApply && onApply({ mode })
     onClose()
   }
 
@@ -153,7 +118,10 @@ export default function SessionControlPanel({
         }`}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-surface-light-border dark:border-surface-border">
-          <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Session settings</h2>
+          <div>
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Session settings</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Choose how tracking runs on this device</p>
+          </div>
           <button type="button" onClick={onClose} className="btn-ghost !p-2" aria-label="Close">
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -164,8 +132,8 @@ export default function SessionControlPanel({
 
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
           <div>
-            <label className="label">Operational mode (PRD §2.2)</label>
-            <div className="grid grid-cols-1 gap-2">
+            <label className="label">Operational mode</label>
+            <div className="grid grid-cols-1 gap-2 mt-1">
               {modeOptions.map((opt) => {
                 const selected = mode === opt.value
                 const c = colorMap[opt.color]
@@ -205,43 +173,27 @@ export default function SessionControlPanel({
                 )
               })}
             </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">
+              Day-to-day actions (pause / start / stop) stay on the dashboard — this panel only decides <span className="font-medium">which rules</span> apply.
+            </p>
           </div>
 
-          <div className="flex items-center justify-between py-1">
-            <div>
-              <div className="text-sm font-semibold text-slate-900 dark:text-white">Activity tracking</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                {isStrict ? 'Always on in Strict Compliance' : isOff ? 'Session closed — hooks discarded' : 'Capture app name, masked title, timestamps'}
-              </div>
+          <div className="rounded-xl border border-surface-light-border dark:border-surface-border bg-slate-50 dark:bg-surface-dark/50 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-semibold text-slate-900 dark:text-white">Org policy</span>
+              <span className="badge bg-slate-100 text-slate-600 border border-slate-200 dark:bg-surface-dark dark:text-slate-300 dark:border-surface-border">Read-only</span>
             </div>
-            <Switch checked={isOff ? false : isStrict ? true : tracking} onChange={setTracking} disabled={isOff || isStrict} />
-          </div>
-
-          <div className="flex items-center justify-between py-1">
-            <div>
-              <div className="text-sm font-semibold text-slate-900 dark:text-white">Pause recording</div>
-              <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                {isStrict ? 'Not available — zero local UI toggle' : isOff ? 'Start a session first' : 'PAUSED_OPTIONAL — hooks stay up, events discarded'}
-              </div>
-            </div>
-            <Switch checked={pauseLocked ? false : paused} onChange={setPaused} disabled={pauseLocked} />
-          </div>
-
-          <div>
-            <label htmlFor="idle-threshold" className="label">
-              Idle threshold (seconds)
-            </label>
-            <input
-              id="idle-threshold"
-              type="number"
-              min={30}
-              max={3600}
-              step={10}
-              value={idleSeconds}
-              onChange={(e) => setIdleSeconds(Number(e.target.value))}
-              className="input"
-            />
-            <div className="text-xs text-slate-500 mt-1.5">PRD default idle_threshold_seconds = 300 · PROMPT_WITH_TIMEOUT</div>
+            <ul className="space-y-2.5">
+              {policyItems.map((item) => (
+                <li key={item} className="flex items-start gap-2.5">
+                  <svg className="w-4 h-4 text-chronos-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  <span className="text-xs text-slate-600 dark:text-slate-300">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
@@ -250,7 +202,7 @@ export default function SessionControlPanel({
             Cancel
           </button>
           <button type="button" onClick={handleApply} className="btn-primary">
-            Apply
+            Apply mode
           </button>
         </div>
       </div>

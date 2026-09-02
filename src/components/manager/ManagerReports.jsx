@@ -6,9 +6,9 @@ const ManagerReports = () => (
     </div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       {[
-        { t: 'Weekly Productivity Summary', d: 'Sent to leadership every Monday 08:00 UTC', c: 'chronos', next: 'in 2 days' },
-        { t: 'Monthly Software License Audit', d: 'Finance + IT review of seat waste and ROI', c: 'emerald', next: 'in 18 days' },
-        { t: 'Compliance Screenshot Retention', d: 'PII-redacted archive export to S3 vault', c: 'amber', next: 'in 6 days' },
+        { t: 'Weekly Productivity Summary', d: 'Sent to leadership every Monday 08:00 UTC', c: 'chronos', next: 'in 5 days' },
+        { t: 'Monthly Software License Audit', d: 'Finance + IT review of seat waste and ROI', c: 'emerald', next: 'in 6 days' },
+        { t: 'Compliance Screenshot Retention', d: 'PII-redacted archive export to S3 vault', c: 'amber', next: 'in 2 days' },
         { t: 'Timesheet Reconciliation', d: 'Per-employee active hours exported to payroll', c: 'sky', next: 'tomorrow' },
       ].map((r) => (
         <div key={r.t} className="card p-5">

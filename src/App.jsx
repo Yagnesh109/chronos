@@ -40,7 +40,6 @@ export default function App() {
 
   const [sessionOpen, setSessionOpen] = useState(false)
   const [idleOpen, setIdleOpen] = useState(false)
-  const [storageAlert, setStorageAlert] = useState(true)
   const [activeSection, setActiveSection] = useState('overview')
 
   const UserProfile = {
@@ -74,18 +73,10 @@ export default function App() {
   const handleLogout = () => setAuthed(false)
   const toggleDark = () => setDark((v) => !v)
 
-  const applySession = ({ tracking, paused: p, mode }) => {
-    setTrackingActive(tracking)
-    setPaused(p)
+  const applySession = ({ mode }) => {
     setOperationalMode(mode)
-    if (mode === OperationalMode.OFF) {
-      setPaused(false)
-      setTrackingActive(false)
-    }
-    if (mode === OperationalMode.STRICT) {
-      setTrackingActive(true)
-      setPaused(false)
-    }
+    setTrackingActive(mode !== OperationalMode.OFF)
+    setPaused(false)
   }
 
   return (
@@ -101,12 +92,6 @@ export default function App() {
             onToggleDark={toggleDark}
             onLogout={handleLogout}
             onOpenSession={() => setSessionOpen(true)}
-            storageAlert={storageAlert}
-            onDismissStorage={() => setStorageAlert(false)}
-            onSyncNow={() => {
-              setSyncStatus(SyncStatus.SYNCED)
-              setTimeout(() => setStorageAlert(false), 600)
-            }}
             onPause={() => setPaused(true)}
             onResume={() => setPaused(false)}
             onStartStop={() => {
@@ -126,8 +111,6 @@ export default function App() {
             open={sessionOpen}
             onClose={() => setSessionOpen(false)}
             initialMode={operationalMode}
-            initialTracking={trackingActive}
-            initialPaused={paused}
             onApply={applySession}
           />
 

@@ -39,12 +39,27 @@ const roles = [
   },
 ]
 
+import { invoke } from '@tauri-apps/api/core'
+
 export default function LoginPage({ onLogin }) {
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const form = new FormData(e.currentTarget)
     const role = form.get('role') || UserRole.EMPLOYEE
-    onLogin && onLogin(role)
+    const email = form.get('email') || ''
+    const password = form.get('password') || ''
+    
+    try {
+      const response = await invoke('authenticate', { email, password, role })
+      if (response.success) {
+        onLogin && onLogin(response.role)
+      } else {
+        alert('Authentication failed: ' + response.message)
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      alert('Failed to connect to backend')
+    }
   }
 
   return (
