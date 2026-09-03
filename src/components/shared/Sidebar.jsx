@@ -13,6 +13,67 @@ export const AdminNavSections = [
       </svg>
     ),
   },
+
+  {
+  id: 'live-activity',
+  label: 'Live Activity',
+  icon: (
+    <svg
+      className="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+      <path d="M5 5l2 2" />
+      <path d="M19 5l-2 2" />
+    </svg>
+  ),
+},
+
+{
+  id: 'activity-logs',
+  label: 'Activity Logs',
+  icon: (
+    <svg
+      className="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 3v18h18" />
+      <path d="M7 14l3-3 3 2 5-6" />
+    </svg>
+  ),
+},
+
+
+{
+  id: 'productivity',
+  label: 'Productivity',
+  icon: (
+    <svg
+      className="w-5 h-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 3v18h18" />
+      <path d="M7 15l4-4 3 2 6-7" />
+      <path d="M17 6h3v3" />
+    </svg>
+  ),
+},
   {
     id: 'users',
     label: 'Users',

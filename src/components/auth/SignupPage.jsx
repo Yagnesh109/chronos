@@ -1,98 +1,41 @@
 import { useState } from 'react'
 
-export const UserRole = {
-  ADMIN: 'admin',
-  MANAGER: 'manager',
-  EMPLOYEE: 'employee',
-}
-
-const roles = [
-  {
-    id: UserRole.ADMIN,
-    title: 'Admin',
-    subtitle: 'Users, devices, policies, audit',
-    icon: (
-      <svg
-        className="w-5 h-5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
-  },
-  {
-    id: UserRole.MANAGER,
-    title: 'Company Head',
-    subtitle: 'Utilization, focus, software ROI',
-    icon: (
-      <svg
-        className="w-5 h-5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M3 3v18h18" />
-        <path d="M7 14l4-4 4 4 6-6" />
-      </svg>
-    ),
-  },
-  {
-    id: UserRole.EMPLOYEE,
-    title: 'Employee',
-    subtitle: 'Self-service hours, split, screens',
-    icon: (
-      <svg
-        className="w-5 h-5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-    ),
-  },
-]
-
-export default function LoginPage({
-  onLogin,
-  onGoToSignup,
-}) {
+export default function SignupPage({ onSignupSuccess, onGoToLogin }) {
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     setError('')
-    setLoading(true)
+    setSuccess('')
 
     const form = new FormData(e.currentTarget)
 
+    const name = form.get('name')
     const email = form.get('email')
     const password = form.get('password')
-    const role = form.get('role') || UserRole.EMPLOYEE
+    const confirmPassword = form.get('confirmPassword')
+
+    // Check password confirmation
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
+    setLoading(true)
 
     try {
       const response = await fetch(
-        'http://127.0.0.1:8080/login',
+        'http://127.0.0.1:8080/signup',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            name,
             email,
             password,
           }),
@@ -105,20 +48,25 @@ export default function LoginPage({
         throw new Error(
           data.message ||
           data.error ||
-          'Invalid email or password'
+          'Failed to create account'
         )
       }
 
-      console.log('Login successful:', data)
+      console.log('Signup successful:', data)
 
-      // Backend login successful
-      // Role is currently used for frontend dashboard navigation
-      if (onLogin) {
-        onLogin(role)
-      }
+      setSuccess('Account created successfully! You can now sign in.')
+
+      // Optional: automatically move to login page
+      setTimeout(() => {
+        if (onSignupSuccess) {
+          onSignupSuccess()
+        } else if (onGoToLogin) {
+          onGoToLogin()
+        }
+      }, 1000)
 
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('Signup error:', error)
 
       setError(
         error.message || 'Unable to connect to server'
@@ -164,19 +112,26 @@ export default function LoginPage({
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                Welcome to Chronos
+                Create your account
               </h1>
 
               <p className="text-slate-500 dark:text-slate-400 mt-2 text-center text-sm sm:text-base">
-                Privacy-first endpoint &amp; screen-time analytics
+                Create a Chronos account to get started
               </p>
 
             </div>
 
-            {/* Error Message */}
+            {/* Error */}
             {error && (
               <div className="mb-5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">
                 {error}
+              </div>
+            )}
+
+            {/* Success */}
+            {success && (
+              <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300">
+                {success}
               </div>
             )}
 
@@ -184,6 +139,28 @@ export default function LoginPage({
               onSubmit={handleSubmit}
               className="space-y-5"
             >
+
+              {/* Name */}
+              <div>
+
+                <label
+                  htmlFor="name"
+                  className="label"
+                >
+                  Full name
+                </label>
+
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  className="input"
+                  placeholder="Enter your name"
+                  autoComplete="name"
+                  required
+                />
+
+              </div>
 
               {/* Email */}
               <div>
@@ -223,89 +200,63 @@ export default function LoginPage({
                   type="password"
                   className="input"
                   placeholder="••••••••"
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   required
                 />
 
               </div>
 
-              {/* Role Selection */}
-              <fieldset>
+              {/* Confirm Password */}
+              <div>
 
-                <legend className="label">
-                  Sign in as
-                </legend>
+                <label
+                  htmlFor="confirmPassword"
+                  className="label"
+                >
+                  Confirm password
+                </label>
 
-                <div className="grid grid-cols-1 gap-2">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  className="input"
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  required
+                />
 
-                  {roles.map((r, i) => (
+              </div>
 
-                    <label
-                      key={r.id}
-                      className="flex items-center gap-3 p-3 rounded-xl border border-surface-light-border dark:border-surface-border bg-slate-50 dark:bg-surface-dark/50 cursor-pointer has-[:checked]:border-chronos-500 has-[:checked]:bg-chronos-50 has-[:checked]:ring-2 has-[:checked]:ring-chronos-500/20 dark:has-[:checked]:bg-chronos-500/10"
-                    >
-
-                      <input
-                        type="radio"
-                        name="role"
-                        value={r.id}
-                        defaultChecked={i === 2}
-                        className="accent-chronos-600"
-                      />
-
-                      <span className="w-9 h-9 rounded-lg bg-white dark:bg-surface-card border border-surface-light-border dark:border-surface-border flex items-center justify-center text-chronos-600 dark:text-chronos-400 shrink-0">
-                        {r.icon}
-                      </span>
-
-                      <span className="min-w-0">
-
-                        <span className="block text-sm font-semibold text-slate-900 dark:text-white">
-                          {r.title}
-                        </span>
-
-                        <span className="block text-xs text-slate-500 dark:text-slate-400">
-                          {r.subtitle}
-                        </span>
-
-                      </span>
-
-                    </label>
-
-                  ))}
-
-                </div>
-
-              </fieldset>
-
-              {/* Login Button */}
+              {/* Signup Button */}
               <button
                 type="submit"
                 className="btn-primary w-full py-3 text-base disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={loading}
               >
                 {loading
-                  ? 'Signing In...'
-                  : 'Sign In'}
+                  ? 'Creating Account...'
+                  : 'Create Account'}
               </button>
 
             </form>
 
-<div className="mt-6 text-center">
-  <p className="text-sm text-slate-500 dark:text-slate-400">
-    Don't have an account?
-  </p>
+            {/* Login Link */}
+            <div className="mt-6 text-center">
 
-  <button
-    type="button"
-    onClick={onGoToSignup}
-    className="mt-2 text-sm font-semibold text-chronos-600 hover:text-chronos-700 dark:text-chronos-400"
-  >
-    Create an account
-  </button>
-</div>
-            <p className="mt-5 text-center text-xs text-slate-400">
-              Secure authentication powered by Rust and PostgreSQL.
-            </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Already have an account?
+              </p>
+
+              <button
+                type="button"
+                onClick={onGoToLogin}
+                className="mt-2 text-sm font-semibold text-chronos-600 hover:text-chronos-700 dark:text-chronos-400"
+              >
+                Sign In
+              </button>
+
+            </div>
 
           </div>
 

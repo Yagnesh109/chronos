@@ -7,19 +7,25 @@ import AdminPolicies from './AdminPolicies.jsx'
 import AdminCategories from './AdminCategories.jsx'
 import AdminAudit from './AdminAudit.jsx'
 import AdminOrgSettings from './AdminOrgSettings.jsx'
+import AdminLiveActivity from './AdminLiveActivity.jsx'
+import AdminActivityLogs from './AdminActivityLogs.jsx'
+import AdminProductivity from './AdminProductivity.jsx'
 
 export default function AdminDashboard({ activeSection }) {
   const section = useMemo(() => {
-    switch (activeSection) {
-      case 'users': return <AdminUsers />
-      case 'devices': return <AdminDevices />
-      case 'policies': return <AdminPolicies />
-      case 'categories': return <AdminCategories />
-      case 'audit': return <AdminAudit />
-      case 'org-settings': return <AdminOrgSettings />
-      case 'overview':
-      default: return <AdminOverview />
-    }
+switch (activeSection) {
+  case 'live-activity': return <AdminLiveActivity />
+  case 'activity-logs': return <AdminActivityLogs />
+  case 'productivity': return <AdminProductivity />
+  case 'users': return <AdminUsers />
+  case 'devices': return <AdminDevices />
+  case 'policies': return <AdminPolicies />
+  case 'categories': return <AdminCategories />
+  case 'audit': return <AdminAudit />
+  case 'org-settings': return <AdminOrgSettings />
+  case 'overview':
+  default: return <AdminOverview />
+}
   }, [activeSection])
 
   return (
