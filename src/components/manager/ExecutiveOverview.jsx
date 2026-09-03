@@ -10,7 +10,7 @@ const ExecutiveOverview = () => (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <StatCard
         label="Company-wide Active Hours"
-        value="4,218h"
+        value="3,200h"
         trend="+6.4% WoW"
         trendUp={true}
         color="chronos"
@@ -18,7 +18,7 @@ const ExecutiveOverview = () => (
       />
       <StatCard
         label="Avg Productivity Score"
-        value="76.8"
+        value="73.4"
         trend="+2.3"
         trendUp={true}
         color="emerald"
@@ -26,7 +26,7 @@ const ExecutiveOverview = () => (
       />
       <StatCard
         label="Software License ROI"
-        value="89.2%"
+        value="86.9%"
         trend="+4.1%"
         trendUp={true}
         color="sky"
@@ -55,8 +55,8 @@ const ExecutiveOverview = () => (
           <div className="relative h-52">
             <div className="absolute inset-0 flex items-end gap-1.5 px-2">
               {Array.from({ length: 30 }).map((_, i) => {
-                const h1 = 35 + Math.round(Math.sin(i * 0.5) * 15 + Math.random() * 30)
-                const h2 = 20 + Math.round(Math.cos(i * 0.4) * 10 + Math.random() * 25)
+                const h1 = 45 + Math.round(Math.sin(i * 0.5) * 18 + Math.sin(i * 0.21) * 12)
+                const h2 = 25 + Math.round(Math.cos(i * 0.4) * 12 + Math.sin(i * 0.09) * 10)
                 return (
                   <div key={i} className="flex-1 flex flex-col justify-end gap-0.5 h-full">
                     <div className="w-full bg-gradient-to-t from-chronos-500 to-chronos-400 rounded-t opacity-80" style={{ height: `${h1}%` }} />
@@ -94,10 +94,10 @@ const ExecutiveOverview = () => (
           </div>
           <div className="mt-5 grid grid-cols-2 gap-3">
             {[
-              { label: 'Productive', pct: '54%', val: '2,278h', c: 'text-emerald-600 dark:text-emerald-400', d: 'bg-emerald-500' },
-              { label: 'Neutral', pct: '22%', val: '928h', c: 'text-sky-600 dark:text-sky-400', d: 'bg-sky-500' },
-              { label: 'Unproductive', pct: '13%', val: '548h', c: 'text-rose-600 dark:text-rose-400', d: 'bg-rose-500' },
-              { label: 'Uncategorized', pct: '11%', val: '464h', c: 'text-slate-500 dark:text-slate-400', d: 'bg-slate-400' },
+              { label: 'Productive', pct: '54%', val: '1,728h', c: 'text-emerald-600 dark:text-emerald-400', d: 'bg-emerald-500' },
+              { label: 'Neutral', pct: '22%', val: '704h', c: 'text-sky-600 dark:text-sky-400', d: 'bg-sky-500' },
+              { label: 'Unproductive', pct: '13%', val: '416h', c: 'text-rose-600 dark:text-rose-400', d: 'bg-rose-500' },
+              { label: 'Uncategorized', pct: '11%', val: '352h', c: 'text-slate-500 dark:text-slate-400', d: 'bg-slate-400' },
             ].map((x) => (
               <div key={x.label} className="flex items-center gap-2.5">
                 <span className={`w-2.5 h-2.5 rounded-full ${x.d} shrink-0`} />

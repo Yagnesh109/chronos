@@ -104,24 +104,24 @@ export default function LoginPage({
       if (!response.ok) {
         throw new Error(
           data.message ||
-          data.error ||
-          'Invalid email or password'
+            data.error ||
+            'Invalid email or password'
         )
       }
 
       console.log('Login successful:', data)
 
-      // Backend login successful
-      // Role is currently used for frontend dashboard navigation
+      // Backend login successful.
+      // Role is currently used for frontend dashboard navigation.
       if (onLogin) {
         onLogin(role)
       }
-
     } catch (error) {
       console.error('Login error:', error)
 
       setError(
-        error.message || 'Unable to connect to server'
+        error.message ||
+          'Unable to connect to server'
       )
     } finally {
       setLoading(false)
@@ -290,19 +290,20 @@ export default function LoginPage({
 
             </form>
 
-<div className="mt-6 text-center">
-  <p className="text-sm text-slate-500 dark:text-slate-400">
-    Don't have an account?
-  </p>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Don't have an account?
+              </p>
 
-  <button
-    type="button"
-    onClick={onGoToSignup}
-    className="mt-2 text-sm font-semibold text-chronos-600 hover:text-chronos-700 dark:text-chronos-400"
-  >
-    Create an account
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={onGoToSignup}
+                className="mt-2 text-sm font-semibold text-chronos-600 hover:text-chronos-700 dark:text-chronos-400"
+              >
+                Create an account
+              </button>
+            </div>
+
             <p className="mt-5 text-center text-xs text-slate-400">
               Secure authentication powered by Rust and PostgreSQL.
             </p>

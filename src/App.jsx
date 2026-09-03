@@ -7,13 +7,19 @@ import LoginPage, {
 import SignupPage from './components/auth/SignupPage.jsx'
 
 import { SyncStatus } from './components/shared/Header.jsx'
+
 import SessionControlPanel, {
   OperationalMode,
 } from './components/employee/SessionControlPanel.jsx'
+
 import IdleTimeoutModal from './components/employee/IdleTimeoutModal.jsx'
+
 import Sidebar from './components/shared/Sidebar.jsx'
+
 import AdminDashboard from './components/admin/AdminDashboard.jsx'
+
 import ManagerDashboard from './components/manager/ManagerDashboard.jsx'
+
 import EmployeeDashboard from './components/employee/EmployeeDashboard.jsx'
 
 
@@ -54,7 +60,7 @@ const useDarkMode = () => {
 export default function App() {
   const [authed, setAuthed] = useState(false)
 
-  // login or signup page
+  // Login or signup page
   const [authPage, setAuthPage] = useState('login')
 
   const [role, setRole] = useState(UserRole.EMPLOYEE)
@@ -111,7 +117,7 @@ export default function App() {
   const shell = useMemo(
     () =>
       'min-h-screen bg-surface-light text-slate-800 dark:bg-surface-dark dark:text-slate-100 antialiased dark:bg-[radial-gradient(ellipse_at_top_right,_rgba(99,102,241,0.12),_transparent_50%),radial-gradient(ellipse_at_bottom_left,_rgba(14,165,233,0.08),_transparent_50%)]',
-    [],
+    []
   )
 
 
@@ -122,35 +128,27 @@ export default function App() {
   if (!authed) {
     return (
       <div className={shell}>
-
         {authPage === 'login' ? (
-
           <LoginPage
             onLogin={(selectedRole) => {
               setRole(selectedRole)
               setActiveSection('overview')
               setAuthed(true)
             }}
-
             onGoToSignup={() => {
               setAuthPage('signup')
             }}
           />
-
         ) : (
-
           <SignupPage
             onSignupSuccess={() => {
               setAuthPage('login')
             }}
-
             onGoToLogin={() => {
               setAuthPage('login')
             }}
           />
-
         )}
-
       </div>
     )
   }
@@ -202,20 +200,15 @@ export default function App() {
 
   return (
     <div className={shell}>
-
       {isEmployee ? (
-
         <>
           <EmployeeDashboard
             operationalMode={operationalMode}
             trackingActive={trackingActive}
             paused={paused}
             syncStatus={syncStatus}
-
             dark={dark}
-
             onToggleDark={toggleDark}
-
             onLogout={handleLogout}
 
             onOpenSession={() =>
@@ -260,7 +253,6 @@ export default function App() {
                 )
 
                 setTrackingActive(true)
-
                 setPaused(false)
               }
             }}
@@ -272,39 +264,28 @@ export default function App() {
 
           <SessionControlPanel
             open={sessionOpen}
-
             onClose={() =>
               setSessionOpen(false)
             }
-
             initialMode={operationalMode}
-
             initialTracking={trackingActive}
-
             initialPaused={paused}
-
             onApply={applySession}
           />
 
           <IdleTimeoutModal
             open={idleOpen}
-
             onClose={() =>
               setIdleOpen(false)
             }
-
             initialIdleSeconds={300}
-
             countDownSeconds={60}
-
             onResume={() =>
               setPaused(false)
             }
-
             onPause={() =>
               setPaused(true)
             }
-
             onMarkIdle={() =>
               setSyncStatus(
                 SyncStatus.OFFLINE
@@ -312,16 +293,11 @@ export default function App() {
             }
           />
         </>
-
       ) : (
-
         <div className="flex min-h-screen">
-
           <Sidebar
             role={role}
-
             activeSection={activeSection}
-
             onSelectSection={setActiveSection}
 
             onOpenSettings={() => {
@@ -350,23 +326,16 @@ export default function App() {
           />
 
           {role === UserRole.ADMIN ? (
-
             <AdminDashboard
               activeSection={activeSection}
             />
-
           ) : (
-
             <ManagerDashboard
               activeSection={activeSection}
             />
-
           )}
-
         </div>
-
       )}
-
     </div>
   )
 }

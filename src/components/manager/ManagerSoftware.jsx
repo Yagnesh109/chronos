@@ -2,14 +2,14 @@ import StatCard from '../common/StatCard.jsx'
 
 const ManagerSoftware = () => {
   const apps = [
-    { name: 'VS Code', cat: 'Productive', seats: 42, used: 38, h: '892h', cost: '$0', waste: 0, col: 'emerald' },
-    { name: 'Figma', cat: 'Productive', seats: 22, used: 17, h: '418h', cost: '$3,300/mo', waste: 22, col: 'emerald' },
+    { name: 'VS Code', cat: 'Productive', seats: 42, used: 38, h: '836h', cost: '$0', waste: 0, col: 'emerald' },
+    { name: 'Figma', cat: 'Productive', seats: 22, used: 17, h: '132h', cost: '$330/mo', waste: 23, col: 'emerald' },
     { name: 'Slack', cat: 'Neutral', seats: 142, used: 138, h: '1,012h', cost: '$1,065/mo', waste: 3, col: 'sky' },
-    { name: 'Zoom', cat: 'Neutral', seats: 142, used: 101, h: '621h', cost: '$1,994/mo', waste: 29, col: 'sky' },
-    { name: 'Notion', cat: 'Productive', seats: 78, used: 41, h: '208h', cost: '$624/mo', waste: 47, col: 'amber' },
-    { name: 'Adobe Creative Cloud', cat: 'Productive', seats: 14, used: 9, h: '156h', cost: '$714/mo', waste: 36, col: 'amber' },
-    { name: 'GitHub Enterprise', cat: 'Productive', seats: 42, used: 40, h: '512h', cost: '$966/mo', waste: 5, col: 'emerald' },
-    { name: 'YouTube.com', cat: 'Unproductive', seats: '-', used: 58, h: '324h', cost: '-', waste: '-', col: 'rose' },
+    { name: 'Zoom', cat: 'Neutral', seats: 142, used: 101, h: '242h', cost: '$1,994/mo', waste: 29, col: 'sky' },
+    { name: 'Notion', cat: 'Productive', seats: 78, used: 41, h: '103h', cost: '$624/mo', waste: 47, col: 'amber' },
+    { name: 'Adobe Creative Cloud', cat: 'Productive', seats: 14, used: 9, h: '45h', cost: '$714/mo', waste: 36, col: 'amber' },
+    { name: 'GitHub Enterprise', cat: 'Productive', seats: 42, used: 40, h: '440h', cost: '$966/mo', waste: 5, col: 'emerald' },
+    { name: 'YouTube.com', cat: 'Unproductive', seats: '-', used: 58, h: '122h', cost: '-', waste: '-', col: 'rose' },
   ]
   return (
     <div className="space-y-6">
@@ -18,9 +18,9 @@ const ManagerSoftware = () => {
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">License utilization, seat waste, and top time-consuming apps per PRD Executive Dashboard expectations</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <StatCard label="Annual SaaS Spend" value="$118,400" trend="+3.1%" trendUp={false} color="rose" icon={<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />
-        <StatCard label="Potential Savings (unused seats)" value="$27,900/yr" color="emerald" icon={<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>} />
-        <StatCard label="Avg. License Utilization" value="72.4%" trend="+5.2%" trendUp={true} color="sky" icon={<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>} />
+        <StatCard label="Annual SaaS Spend" value="$68,316" trend="+3.1%" trendUp={false} color="rose" icon={<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} />
+        <StatCard label="Potential Savings (unused seats)" value="$14,976/yr" color="emerald" icon={<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>} />
+        <StatCard label="Avg. License Utilization" value="86.9%" trend="+5.2%" trendUp={true} color="sky" icon={<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>} />
       </div>
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">
