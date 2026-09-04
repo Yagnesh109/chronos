@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const activityLogs = [
   {
@@ -123,6 +123,12 @@ const AdminActivityLogs = () => {
   const [type, setType] = useState('All Events')
   const [sortBy, setSortBy] = useState('Latest First')
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // Number of records shown on each page
+  const ITEMS_PER_PAGE = 5
+
   // Convert time string into minutes
   const getTimeInMinutes = (time) => {
     if (time === 'Just now') return 0
@@ -198,12 +204,76 @@ const AdminActivityLogs = () => {
     return result
   }, [search, department, type, sortBy])
 
+  // Total number of pages
+  const totalPages = Math.ceil(
+    filteredLogs.length / ITEMS_PER_PAGE
+  )
+
+  // Get only records for the current page
+  const paginatedLogs = useMemo(() => {
+    const startIndex =
+      (currentPage - 1) * ITEMS_PER_PAGE
+
+    const endIndex =
+      startIndex + ITEMS_PER_PAGE
+
+    return filteredLogs.slice(startIndex, endIndex)
+  }, [filteredLogs, currentPage])
+
+  // Keep current page valid when filters reduce the results
+  useEffect(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+
+    if (totalPages === 0 && currentPage !== 1) {
+      setCurrentPage(1)
+    }
+  }, [totalPages, currentPage])
+
+  // Reset filters
   const resetFilters = () => {
     setSearch('')
     setDepartment('All Departments')
     setType('All Events')
     setSortBy('Latest First')
+    setCurrentPage(1)
   }
+
+  // Search change
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value)
+    setCurrentPage(1)
+  }
+
+  // Department change
+  const handleDepartmentChange = (e) => {
+    setDepartment(e.target.value)
+    setCurrentPage(1)
+  }
+
+  // Event type change
+  const handleTypeChange = (e) => {
+    setType(e.target.value)
+    setCurrentPage(1)
+  }
+
+  // Sort change
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value)
+    setCurrentPage(1)
+  }
+
+  // Pagination range
+  const startItem =
+    filteredLogs.length === 0
+      ? 0
+      : (currentPage - 1) * ITEMS_PER_PAGE + 1
+
+  const endItem = Math.min(
+    currentPage * ITEMS_PER_PAGE,
+    filteredLogs.length
+  )
 
   return (
     <div className="space-y-6">
@@ -288,7 +358,7 @@ const AdminActivityLogs = () => {
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchChange}
               placeholder="Search employee or event..."
               className="input"
             />
@@ -296,7 +366,7 @@ const AdminActivityLogs = () => {
             {/* Department Filter */}
             <select
               value={department}
-              onChange={(e) => setDepartment(e.target.value)}
+              onChange={handleDepartmentChange}
               className="input"
             >
               <option>All Departments</option>
@@ -309,7 +379,7 @@ const AdminActivityLogs = () => {
             {/* Event Type Filter */}
             <select
               value={type}
-              onChange={(e) => setType(e.target.value)}
+              onChange={handleTypeChange}
               className="input"
             >
               <option>All Events</option>
@@ -325,7 +395,7 @@ const AdminActivityLogs = () => {
             {/* Sort By */}
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={handleSortChange}
               className="input"
             >
               <option>Latest First</option>
@@ -400,8 +470,8 @@ const AdminActivityLogs = () => {
 
             <tbody>
 
-              {filteredLogs.length > 0 ? (
-                filteredLogs.map((log) => {
+              {paginatedLogs.length > 0 ? (
+                paginatedLogs.map((log) => {
                   const config = typeConfig[log.type]
 
                   return (
@@ -468,6 +538,86 @@ const AdminActivityLogs = () => {
           </table>
 
         </div>
+
+        {/* Pagination */}
+        {filteredLogs.length > 0 && (
+          <div className="flex flex-col gap-4 border-t border-surface-light-border px-6 py-4 dark:border-surface-border sm:flex-row sm:items-center sm:justify-between">
+
+            {/* Showing information */}
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Showing{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-200">
+                {startItem}
+              </span>{' '}
+              to{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-200">
+                {endItem}
+              </span>{' '}
+              of{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-200">
+                {filteredLogs.length}
+              </span>{' '}
+              events
+            </p>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center gap-1">
+
+              {/* Previous */}
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((page) =>
+                    Math.max(page - 1, 1)
+                  )
+                }
+                disabled={currentPage === 1}
+                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-surface-border dark:text-slate-300 dark:hover:bg-surface-dark"
+              >
+                Previous
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex items-center gap-1">
+
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    className={`h-9 min-w-9 rounded-lg px-3 text-sm font-medium transition-colors ${
+                      currentPage === page
+                        ? 'bg-chronos-600 text-white'
+                        : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-surface-dark'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+              </div>
+
+              {/* Next */}
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((page) =>
+                    Math.min(page + 1, totalPages)
+                  )
+                }
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-surface-border dark:text-slate-300 dark:hover:bg-surface-dark"
+              >
+                Next
+              </button>
+
+            </div>
+          </div>
+        )}
+
       </div>
 
     </div>

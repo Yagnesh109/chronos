@@ -67,6 +67,13 @@ const AdminLiveActivity = () => {
   const [status, setStatus] = useState('All Status')
   const [sortBy, setSortBy] = useState('Name A-Z')
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // Demo ke liye 3 records per page
+  // Backend mein zyada data aane par bhi pagination automatically work karegi.
+  const ITEMS_PER_PAGE = 3
+
   // Time ko minutes mein convert karne ke liye
   const convertTimeToMinutes = (time) => {
     const hourMatch = time.match(/(\d+)h/)
@@ -102,9 +109,7 @@ const AdminLiveActivity = () => {
 
     // Status filter
     if (status !== 'All Status') {
-      result = result.filter(
-        (employee) => employee.status === status
-      )
+      result = result.filter((employee) => employee.status === status)
     }
 
     // Sorting
@@ -139,16 +144,69 @@ const AdminLiveActivity = () => {
     return result
   }, [search, department, status, sortBy])
 
+  // Total pages
+  const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE)
+
+  // Current page ke employees
+  const paginatedEmployees = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
+    const endIndex = startIndex + ITEMS_PER_PAGE
+
+    return filteredEmployees.slice(startIndex, endIndex)
+  }, [filteredEmployees, currentPage])
+
+  // Agar filter lagane ke baad current page invalid ho jaye
+  // to automatically last valid page par aa jayega.
+  useMemo(() => {
+    if (totalPages > 0 && currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+
+    if (totalPages === 0 && currentPage !== 1) {
+      setCurrentPage(1)
+    }
+  }, [totalPages, currentPage])
+
   const handleResetFilters = () => {
     setSearch('')
     setDepartment('All Departments')
     setStatus('All Status')
     setSortBy('Name A-Z')
+    setCurrentPage(1)
   }
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const handleDepartmentChange = (e) => {
+    setDepartment(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const startItem =
+    filteredEmployees.length === 0
+      ? 0
+      : (currentPage - 1) * ITEMS_PER_PAGE + 1
+
+  const endItem = Math.min(
+    currentPage * ITEMS_PER_PAGE,
+    filteredEmployees.length
+  )
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -228,21 +286,20 @@ const AdminLiveActivity = () => {
       <div className="card">
         <div className="card-body">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-
             {/* Search */}
             <input
               type="text"
               placeholder="Search employee..."
               className="input"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearchChange}
             />
 
             {/* Department */}
             <select
               className="input"
               value={department}
-              onChange={(e) => setDepartment(e.target.value)}
+              onChange={handleDepartmentChange}
             >
               <option>All Departments</option>
               <option>Engineering</option>
@@ -255,7 +312,7 @@ const AdminLiveActivity = () => {
             <select
               className="input"
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={handleStatusChange}
             >
               <option>All Status</option>
               <option>Active</option>
@@ -267,7 +324,7 @@ const AdminLiveActivity = () => {
             <select
               className="input"
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={handleSortChange}
             >
               <option>Name A-Z</option>
               <option>Name Z-A</option>
@@ -283,7 +340,6 @@ const AdminLiveActivity = () => {
             >
               Reset Filters
             </button>
-
           </div>
         </div>
       </div>
@@ -337,8 +393,8 @@ const AdminLiveActivity = () => {
             </thead>
 
             <tbody>
-              {filteredEmployees.length > 0 ? (
-                filteredEmployees.map((employee) => {
+              {paginatedEmployees.length > 0 ? (
+                paginatedEmployees.map((employee) => {
                   const style = statusStyles[employee.status]
 
                   return (
@@ -364,7 +420,9 @@ const AdminLiveActivity = () => {
 
                       <td className="px-6 py-4">
                         <span className={`badge ${style.badge}`}>
-                          <span className={`h-2 w-2 rounded-full ${style.dot}`} />
+                          <span
+                            className={`h-2 w-2 rounded-full ${style.dot}`}
+                          />
                           {employee.status}
                         </span>
                       </td>
@@ -396,6 +454,78 @@ const AdminLiveActivity = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        {filteredEmployees.length > 0 && (
+          <div className="flex flex-col gap-4 border-t border-surface-light-border px-6 py-4 dark:border-surface-border sm:flex-row sm:items-center sm:justify-between">
+            {/* Showing count */}
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Showing{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-200">
+                {startItem}
+              </span>{' '}
+              to{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-200">
+                {endItem}
+              </span>{' '}
+              of{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-200">
+                {filteredEmployees.length}
+              </span>{' '}
+              employees
+            </p>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center gap-1">
+              {/* Previous */}
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((page) => Math.max(page - 1, 1))
+                }
+                disabled={currentPage === 1}
+                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-surface-border dark:text-slate-300 dark:hover:bg-surface-dark"
+              >
+                Previous
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex items-center gap-1">
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    className={`h-9 min-w-9 rounded-lg px-3 text-sm font-medium transition-colors ${
+                      currentPage === page
+                        ? 'bg-chronos-600 text-white'
+                        : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-surface-dark'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+
+              {/* Next */}
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentPage((page) =>
+                    Math.min(page + 1, totalPages)
+                  )
+                }
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-surface-border dark:text-slate-300 dark:hover:bg-surface-dark"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -1,145 +1,208 @@
 import StatCard from '../common/StatCard.jsx'
 
 const AdminOverview = () => {
-  /*
-    Dashboard summary is kept consistent with the current
-    mock data used in AdminUsers.jsx and AdminDevices.jsx.
+  // =========================================================
+  // PLATFORM OWNER / ADMIN DATA
+  // =========================================================
+  // These values represent Chronos platform-level data.
+  // They are not tied to one company's internal employees.
+  // Replace these demo values with API data later.
+  // =========================================================
 
-    Users:
-    - Total: 6
-    - Active: 4
-    - Idle: 1
-    - Offline: 1
+  const platformStats = {
+    totalCompanies: 128,
+    activeCompanies: 116,
+    licensedSeats: 4820,
+    activeSeats: 4176,
+    monthlyRevenue: '₹8.4L',
+    newCompanies: 12,
+    expiringSoon: 7,
+    platformHealth: 'Operational',
+  }
 
-    Devices:
-    - Total: 5
-    - Healthy (>= 85): 3
-    - Needs attention (< 85): 2
-  */
-
-  const weeklyActivity = [
-    { day: 'Mon', value: 68 },
-    { day: 'Tue', value: 74 },
-    { day: 'Wed', value: 81 },
-    { day: 'Thu', value: 76 },
-    { day: 'Fri', value: 88 },
-    { day: 'Sat', value: 42 },
-    { day: 'Sun', value: 28 },
-  ]
-
-  const operationalModes = [
+  const subscriptionPlans = [
     {
-      label: 'Strict Compliance',
-      count: 1,
-      pct: 17,
-      color: 'bg-rose-500',
-      text: 'text-rose-600 dark:text-rose-400',
+      name: 'Enterprise',
+      companies: 24,
+      seats: 2180,
+      percentage: 19,
+      color: 'bg-violet-500',
+      text: 'text-violet-600 dark:text-violet-400',
     },
     {
-      label: 'Privacy-First / Hybrid',
-      count: 4,
-      pct: 66,
+      name: 'Business',
+      companies: 58,
+      seats: 1860,
+      percentage: 45,
       color: 'bg-chronos-500',
       text: 'text-chronos-600 dark:text-chronos-400',
     },
     {
-      label: 'Contractor',
-      count: 1,
-      pct: 17,
-      color: 'bg-emerald-500',
-      text: 'text-emerald-600 dark:text-emerald-400',
+      name: 'Professional',
+      companies: 37,
+      seats: 690,
+      percentage: 29,
+      color: 'bg-sky-500',
+      text: 'text-sky-600 dark:text-sky-400',
+    },
+    {
+      name: 'Trial',
+      companies: 9,
+      seats: 90,
+      percentage: 7,
+      color: 'bg-amber-500',
+      text: 'text-amber-600 dark:text-amber-400',
     },
   ]
 
-  const syncHealth = [
+  const companyAccounts = [
     {
-      label: 'Synced',
-      value: 3,
-      description: 'devices currently synced and healthy',
-      dotClass:
-        'bg-emerald-500 shadow-[0_0_0_4px_rgba(16,185,129,0.15)]',
-      cardClass:
-        'bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20',
-      titleClass:
-        'text-emerald-700 dark:text-emerald-400',
+      company: 'Acme Technologies',
+      plan: 'Enterprise',
+      seats: 500,
+      activeSeats: 462,
+      status: 'Active',
+      renewal: '24 days',
     },
     {
-      label: 'Recently Active',
-      value: 1,
-      description: 'device active recently and awaiting next sync',
-      dotClass: 'bg-amber-500',
-      cardClass:
-        'bg-amber-50 dark:bg-amber-500/5 border-amber-200 dark:border-amber-500/20',
-      titleClass:
-        'text-amber-700 dark:text-amber-400',
+      company: 'NexaTech Solutions',
+      plan: 'Business',
+      seats: 250,
+      activeSeats: 218,
+      status: 'Active',
+      renewal: '61 days',
     },
     {
-      label: 'Needs Attention',
-      value: 1,
-      description: 'device has not been seen recently',
-      dotClass: 'bg-rose-500',
-      cardClass:
-        'bg-rose-50 dark:bg-rose-500/5 border-rose-200 dark:border-rose-500/20',
-      titleClass:
-        'text-rose-700 dark:text-rose-400',
+      company: 'Alpha Labs',
+      plan: 'Professional',
+      seats: 120,
+      activeSeats: 94,
+      status: 'Active',
+      renewal: '43 days',
+    },
+    {
+      company: 'Vertex Systems',
+      plan: 'Enterprise',
+      seats: 420,
+      activeSeats: 401,
+      status: 'Active',
+      renewal: '18 days',
+    },
+    {
+      company: 'BrightWorks',
+      plan: 'Business',
+      seats: 180,
+      activeSeats: 143,
+      status: 'Active',
+      renewal: '76 days',
+    },
+    {
+      company: 'Nova Industries',
+      plan: 'Trial',
+      seats: 25,
+      activeSeats: 18,
+      status: 'Trial',
+      renewal: '9 days',
     },
   ]
+
+  const platformActivity = [
+    {
+      title: 'New company onboarded',
+      company: 'Nova Industries',
+      detail: '25 seats activated',
+      time: '12 min ago',
+      type: 'company',
+      dot: 'bg-emerald-500',
+    },
+    {
+      title: 'Subscription upgraded',
+      company: 'Acme Technologies',
+      detail: 'Business → Enterprise',
+      time: '38 min ago',
+      type: 'subscription',
+      dot: 'bg-violet-500',
+    },
+    {
+      title: 'License seats added',
+      company: 'NexaTech Solutions',
+      detail: '+50 employee seats',
+      time: '1 hr ago',
+      type: 'license',
+      dot: 'bg-sky-500',
+    },
+    {
+      title: 'Subscription renewal',
+      company: 'Vertex Systems',
+      detail: 'Annual plan renewed',
+      time: '2 hrs ago',
+      type: 'renewal',
+      dot: 'bg-chronos-500',
+    },
+    {
+      title: 'Trial account created',
+      company: 'BrightCore',
+      detail: '14-day trial started',
+      time: '3 hrs ago',
+      type: 'trial',
+      dot: 'bg-amber-500',
+    },
+  ]
+
+  const seatUtilization =
+    Math.round(
+      (platformStats.activeSeats /
+        platformStats.licensedSeats) *
+        100
+    )
+
+  const activeCompanyRate =
+    Math.round(
+      (platformStats.activeCompanies /
+        platformStats.totalCompanies) *
+        100
+    )
 
   return (
     <div className="space-y-6">
-      {/* Page Heading */}
-      <div>
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-          Admin Overview
-        </h2>
 
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Organization activity, employee status, device health, and tracking overview
-        </p>
+      {/* =====================================================
+          PAGE HEADING
+      ====================================================== */}
+      <div>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+              Platform Overview
+            </h2>
+
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+              Chronos platform performance, customer accounts,
+              licenses, subscriptions, and system health
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+
+            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+              Platform Operational
+            </span>
+          </div>
+
+        </div>
       </div>
 
-      {/* Main Statistics */}
+
+      {/* =====================================================
+          PLATFORM STATISTICS
+      ====================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <StatCard
-          label="Active Employees"
-          value="4 / 6"
-          color="emerald"
-          icon={
-            <svg
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          }
-        />
 
         <StatCard
-          label="Total Devices"
-          value="5"
-          color="sky"
-          icon={
-            <svg
-              className="w-5 h-5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg>
-          }
-        />
-
-        <StatCard
-          label="Healthy Devices"
-          value="3 / 5"
+          label="Total Companies"
+          value={platformStats.totalCompanies}
           color="chronos"
           icon={
             <svg
@@ -149,15 +212,121 @@ const AdminOverview = () => {
               stroke="currentColor"
               strokeWidth="2"
             >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
+              <path d="M3 21h18" />
+              <path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16" />
+              <path d="M9 7h2" />
+              <path d="M13 7h2" />
+              <path d="M9 11h2" />
+              <path d="M13 11h2" />
+              <path d="M9 15h2" />
+              <path d="M13 15h2" />
             </svg>
           }
         />
 
         <StatCard
-          label="Devices Needing Attention"
-          value="2"
+          label="Active Companies"
+          value={`${platformStats.activeCompanies} / ${platformStats.totalCompanies}`}
+          color="emerald"
+          icon={
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          }
+        />
+
+        <StatCard
+          label="Licensed Seats"
+          value={platformStats.licensedSeats.toLocaleString()}
+          color="sky"
+          icon={
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="7" r="4" />
+              <path d="M5.5 21a6.5 6.5 0 0 1 13 0" />
+            </svg>
+          }
+        />
+
+        <StatCard
+          label="Active Seats"
+          value={platformStats.activeSeats.toLocaleString()}
+          color="emerald"
+          icon={
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M20 7L10 17l-5-5" />
+            </svg>
+          }
+        />
+
+      </div>
+
+
+      {/* =====================================================
+          BUSINESS / REVENUE STATISTICS
+      ====================================================== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+        <StatCard
+          label="Monthly Revenue"
+          value={platformStats.monthlyRevenue}
+          color="emerald"
+          icon={
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v10" />
+              <path d="M15 9.5c0-1.1-1.3-2-3-2s-3 .9-3 2 1.3 2 3 2 3 .9 3 2-1.3 2-3 2-3-.9-3-2" />
+            </svg>
+          }
+        />
+
+        <StatCard
+          label="New Companies"
+          value={`+${platformStats.newCompanies}`}
+          color="chronos"
+          icon={
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M12 5v14" />
+              <path d="M5 12h14" />
+            </svg>
+          }
+        />
+
+        <StatCard
+          label="Expiring Soon"
+          value={platformStats.expiringSoon}
           color="rose"
           icon={
             <svg
@@ -173,287 +342,459 @@ const AdminOverview = () => {
             </svg>
           }
         />
+
+        <StatCard
+          label="Platform Health"
+          value={platformStats.platformHealth}
+          color="emerald"
+          icon={
+            <svg
+              className="w-5 h-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+          }
+        />
+
       </div>
 
-      {/* Activity + Operational Mode */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Weekly Activity */}
-        <div className="card lg:col-span-2">
+
+      {/* =====================================================
+          PLATFORM ADOPTION + SUBSCRIPTIONS
+      ====================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        {/* Seat Utilization */}
+        <div className="card">
+
           <div className="card-header">
+
             <div>
               <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                Organization Activity
+                Platform Adoption
               </h3>
 
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Weekly activity overview
+                Customer and license utilization across Chronos
               </p>
             </div>
 
-            <span className="badge bg-slate-100 text-slate-600 border border-slate-200 dark:bg-surface-dark dark:text-slate-300 dark:border-surface-border">
-              Last 7 Days
+            <span className="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
+              {seatUtilization}% utilized
             </span>
+
           </div>
 
-          <div className="card-body">
-            <div className="flex items-end gap-2 sm:gap-3 h-48">
-              {weeklyActivity.map((item) => (
+
+          <div className="card-body space-y-6">
+
+            <div>
+
+              <div className="flex items-center justify-between mb-2">
+
+                <span className="text-sm text-slate-700 dark:text-slate-300">
+                  Licensed seat utilization
+                </span>
+
+                <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {platformStats.activeSeats.toLocaleString()} /{' '}
+                  {platformStats.licensedSeats.toLocaleString()}
+                </span>
+
+              </div>
+
+              <div className="h-3 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
+
                 <div
-                  key={item.day}
-                  className="flex-1 flex flex-col items-center gap-2 h-full justify-end"
-                >
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    {item.value}%
-                  </span>
+                  className="h-full bg-gradient-to-r from-chronos-500 to-sky-400 rounded-full transition-all"
+                  style={{
+                    width: `${seatUtilization}%`,
+                  }}
+                />
 
-                  <div className="w-full flex-1 flex items-end">
-                    <div
-                      className="w-full rounded-t-lg bg-gradient-to-t from-chronos-500 to-sky-400 transition-all hover:opacity-80"
-                      style={{
-                        height: `${item.value}%`,
-                      }}
-                    />
-                  </div>
+              </div>
 
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                    {item.day}
-                  </span>
-                </div>
-              ))}
             </div>
+
+
+            <div>
+
+              <div className="flex items-center justify-between mb-2">
+
+                <span className="text-sm text-slate-700 dark:text-slate-300">
+                  Active customer rate
+                </span>
+
+                <span className="text-sm font-semibold text-slate-900 dark:text-white">
+                  {activeCompanyRate}%
+                </span>
+
+              </div>
+
+              <div className="h-3 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
+
+                <div
+                  className="h-full bg-emerald-500 rounded-full transition-all"
+                  style={{
+                    width: `${activeCompanyRate}%`,
+                  }}
+                />
+
+              </div>
+
+            </div>
+
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-surface-dark border border-slate-200 dark:border-surface-border">
+
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  Active Companies
+                </div>
+
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                  {platformStats.activeCompanies}
+                </div>
+
+              </div>
+
+
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-surface-dark border border-slate-200 dark:border-surface-border">
+
+                <div className="text-xs text-slate-500 dark:text-slate-400">
+                  Unused Seats
+                </div>
+
+                <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+                  {(
+                    platformStats.licensedSeats -
+                    platformStats.activeSeats
+                  ).toLocaleString()}
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
+
         </div>
 
-        {/* Operational Mode */}
+
+        {/* Subscription Distribution */}
         <div className="card">
+
           <div className="card-header">
+
             <div>
               <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                Operational Modes
+                Subscription Distribution
               </h3>
 
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Based on 6 users
+                Customer accounts by current plan
               </p>
             </div>
+
           </div>
+
 
           <div className="card-body space-y-5">
-            {operationalModes.map((mode) => (
-              <div key={mode.label}>
+
+            {subscriptionPlans.map((plan) => (
+
+              <div key={plan.name}>
+
                 <div className="flex items-center justify-between mb-2 gap-3">
-                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
-                    {mode.label}
+
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {plan.name}
                   </span>
 
-                  <span
-                    className={`text-xs font-semibold whitespace-nowrap ${mode.text}`}
-                  >
-                    {mode.count} user{mode.count !== 1 ? 's' : ''}
-                  </span>
+                  <div className="text-right">
+
+                    <span
+                      className={`text-sm font-semibold ${plan.text}`}
+                    >
+                      {plan.companies} companies
+                    </span>
+
+                    <span className="text-xs text-slate-500 dark:text-slate-400 ml-2">
+                      {plan.seats.toLocaleString()} seats
+                    </span>
+
+                  </div>
+
                 </div>
 
-                <div className="h-2 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
+
+                <div className="h-2.5 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
+
                   <div
-                    className={`h-full ${mode.color} rounded-full transition-all`}
+                    className={`h-full ${plan.color} rounded-full transition-all`}
                     style={{
-                      width: `${mode.pct}%`,
+                      width: `${plan.percentage}%`,
                     }}
                   />
+
                 </div>
 
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                  {mode.pct}% of users
-                </div>
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </div>
 
-      {/* User Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                Employee Status
-              </h3>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Current status of registered employees
-              </p>
-            </div>
-          </div>
-
-          <div className="card-body">
-            <div className="grid grid-cols-3 gap-4">
-              {/* Active */}
-              <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-
-                  <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">
-                    Active
-                  </span>
-                </div>
-
-                <div className="text-3xl font-bold text-slate-900 dark:text-white mt-3">
-                  4
-                </div>
-              </div>
-
-              {/* Idle */}
-              <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-
-                  <span className="text-xs font-medium text-amber-700 dark:text-amber-400">
-                    Idle
-                  </span>
-                </div>
-
-                <div className="text-3xl font-bold text-slate-900 dark:text-white mt-3">
-                  1
-                </div>
-              </div>
-
-              {/* Offline */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
-
-                  <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                    Offline
-                  </span>
-                </div>
-
-                <div className="text-3xl font-bold text-slate-900 dark:text-white mt-3">
-                  1
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Device Health */}
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                Device Health
-              </h3>
-
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Health summary across registered devices
-              </p>
-            </div>
-          </div>
-
-          <div className="card-body space-y-4">
-            {/* Healthy */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-700 dark:text-slate-300">
-                  Healthy
-                </span>
-
-                <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                  3 devices
-                </span>
-              </div>
-
-              <div className="h-3 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
-                <div className="h-full w-[60%] bg-emerald-500 rounded-full" />
-              </div>
-            </div>
-
-            {/* Warning */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-700 dark:text-slate-300">
-                  Warning
-                </span>
-
-                <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-                  1 device
-                </span>
-              </div>
-
-              <div className="h-3 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
-                <div className="h-full w-[20%] bg-amber-500 rounded-full" />
-              </div>
-            </div>
-
-            {/* Critical */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-700 dark:text-slate-300">
-                  Critical
-                </span>
-
-                <span className="text-sm font-semibold text-rose-600 dark:text-rose-400">
-                  1 device
-                </span>
-              </div>
-
-              <div className="h-3 bg-slate-100 dark:bg-surface-dark rounded-full overflow-hidden">
-                <div className="h-full w-[20%] bg-rose-500 rounded-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Sync Health */}
+      {/* =====================================================
+          COMPANY ACCOUNTS
+      ====================================================== */}
       <div className="card">
+
         <div className="card-header">
+
           <div>
             <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-              Sync Health
+              Customer Companies
             </h3>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Current synchronization status across 5 registered devices
+              Companies currently using the Chronos platform
             </p>
           </div>
+
+          <button
+            type="button"
+            className="btn-secondary text-xs"
+          >
+            View All Companies
+          </button>
+
         </div>
+
+
+        <div className="overflow-x-auto">
+
+          <table className="w-full min-w-[760px]">
+
+            <thead>
+
+              <tr className="border-b border-slate-200 dark:border-surface-border">
+
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  Company
+                </th>
+
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  Plan
+                </th>
+
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  Seats
+                </th>
+
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  Active Seats
+                </th>
+
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  Status
+                </th>
+
+                <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  Renewal
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              {companyAccounts.map((company) => (
+
+                <tr
+                  key={company.company}
+                  className="border-b border-slate-100 dark:border-surface-border/60 last:border-0 hover:bg-slate-50 dark:hover:bg-surface-dark/60 transition-colors"
+                >
+
+                  <td className="px-5 py-4">
+
+                    <div className="font-medium text-sm text-slate-900 dark:text-white">
+                      {company.company}
+                    </div>
+
+                  </td>
+
+
+                  <td className="px-5 py-4">
+
+                    <span className="text-sm text-slate-600 dark:text-slate-300">
+                      {company.plan}
+                    </span>
+
+                  </td>
+
+
+                  <td className="px-5 py-4">
+
+                    <span className="text-sm font-medium text-slate-900 dark:text-white">
+                      {company.seats.toLocaleString()}
+                    </span>
+
+                  </td>
+
+
+                  <td className="px-5 py-4">
+
+                    <span className="text-sm font-medium text-slate-900 dark:text-white">
+                      {company.activeSeats.toLocaleString()}
+                    </span>
+
+                  </td>
+
+
+                  <td className="px-5 py-4">
+
+                    <span
+                      className={
+                        company.status === 'Trial'
+                          ? 'badge bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20'
+                          : 'badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20'
+                      }
+                    >
+                      {company.status}
+                    </span>
+
+                  </td>
+
+
+                  <td className="px-5 py-4">
+
+                    <span
+                      className={
+                        company.renewal.includes('days') &&
+                        parseInt(company.renewal) <= 30
+                          ? 'text-sm font-medium text-rose-600 dark:text-rose-400'
+                          : 'text-sm text-slate-600 dark:text-slate-300'
+                      }
+                    >
+                      {company.renewal}
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div className="px-5 py-3 border-t border-slate-200 dark:border-surface-border flex items-center justify-between">
+
+          <span className="text-xs text-slate-500 dark:text-slate-400">
+            Showing 6 of {platformStats.totalCompanies} companies
+          </span>
+
+          <span className="text-xs text-slate-400 dark:text-slate-500">
+            Platform customer accounts
+          </span>
+
+        </div>
+
+      </div>
+
+
+      {/* =====================================================
+          PLATFORM ACTIVITY
+      ====================================================== */}
+      <div className="card">
+
+        <div className="card-header">
+
+          <div>
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              Recent Platform Activity
+            </h3>
+
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Recent customer, subscription, and license events
+            </p>
+          </div>
+
+          <span className="badge bg-slate-100 text-slate-600 border border-slate-200 dark:bg-surface-dark dark:text-slate-300 dark:border-surface-border">
+            Live
+          </span>
+
+        </div>
+
 
         <div className="card-body">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {syncHealth.map((item) => (
+
+          <div className="space-y-1">
+
+            {platformActivity.map((activity) => (
+
               <div
-                key={item.label}
-                className={`p-4 rounded-xl border ${item.cardClass}`}
+                key={`${activity.company}-${activity.time}`}
+                className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-surface-dark/60 transition-colors"
               >
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`w-3 h-3 rounded-full shrink-0 ${item.dotClass}`}
-                  />
 
-                  <div>
-                    <div
-                      className={`text-sm font-semibold ${item.titleClass}`}
-                    >
-                      {item.label}
-                    </div>
+                <span
+                  className={`w-2.5 h-2.5 rounded-full shrink-0 ${activity.dot}`}
+                />
 
-                    <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
-                      {item.value}
-                    </div>
+
+                <div className="min-w-0 flex-1">
+
+                  <div className="flex flex-wrap items-center gap-2">
+
+                    <span className="text-sm font-medium text-slate-900 dark:text-white">
+                      {activity.title}
+                    </span>
+
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      • {activity.company}
+                    </span>
+
                   </div>
+
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    {activity.detail}
+                  </div>
+
                 </div>
 
-                <div
-                  className={`text-xs mt-3 ${item.titleClass} opacity-80`}
-                >
-                  {item.description}
-                </div>
+
+                <span className="text-xs text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                  {activity.time}
+                </span>
+
               </div>
+
             ))}
+
           </div>
+
         </div>
+
       </div>
+
     </div>
   )
 }
