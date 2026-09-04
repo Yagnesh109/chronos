@@ -9,7 +9,6 @@ pub struct AppState {
     pub db: sqlx::PgPool,
 }
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -28,11 +27,39 @@ pub fn run() {
 
             // Initialize PostgreSQL connection pool using async runtime block
             let pool = tauri::async_runtime::block_on(async {
-                PgPoolOptions::new()
+                let pool = PgPoolOptions::new()
                     .max_connections(5)
                     .connect(&database_url)
                     .await
-            }).expect("Failed to connect to Postgres. Check your DATABASE_URL.");
+                    .expect("Failed to connect to Postgres. Check your DATABASE_URL.");
+
+                // Create users table if missing
+                let _ = sqlx::query(
+                    r#"
+                    CREATE TABLE IF NOT EXISTS users (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        name VARCHAR(120),
+                        email VARCHAR(255) UNIQUE NOT NULL,
+                        password_hash TEXT NOT NULL,
+                        role VARCHAR(50) NOT NULL DEFAULT 'employee',
+                        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                    );
+                    "#,
+                )
+                .execute(&pool)
+                .await;
+
+                // Ensure columns exist on pre-existing users table
+                let _ = sqlx::query("ALTER TABLE users ADD COLUMN IF NOT EXISTS name VARCHAR(120);")
+                    .execute(&pool)
+                    .await;
+
+                let _ = sqlx::query("ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(50) DEFAULT 'employee';")
+                    .execute(&pool)
+                    .await;
+
+                pool
+            });
 
             // Manage the connection pool via Tauri state
             app.manage(AppState { db: pool });
@@ -40,7 +67,12 @@ pub fn run() {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, auth::authenticate])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            auth::login,
+            auth::signup,
+            auth::authenticate
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

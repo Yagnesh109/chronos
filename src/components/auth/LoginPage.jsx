@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { invoke } from '@tauri-apps/api/core'
 
 export const UserRole = {
   ADMIN: 'admin',
@@ -85,44 +86,27 @@ export default function LoginPage({
     const role = form.get('role') || UserRole.EMPLOYEE
 
     try {
-      const response = await fetch(
-        'http://127.0.0.1:8080/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      )
+      let data;
+      if (typeof window !== 'undefined' && (window.__TAURI_INTERNALS__ || window.__TAURI_IPC__)) {
+        data = await invoke('login', { email, password, role })
+      } else {
+        // Direct invoke
+        data = await invoke('login', { email, password, role })
+      }
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-            data.error ||
-            'Invalid email or password'
-        )
+      if (!data.success) {
+        throw new Error(data.message || 'Invalid email or password')
       }
 
       console.log('Login successful:', data)
 
-      // Backend login successful.
-      // Role is currently used for frontend dashboard navigation.
       if (onLogin) {
-        onLogin(role)
+        onLogin(data.role || role)
       }
-    } catch (error) {
-      console.error('Login error:', error)
-
-      setError(
-        error.message ||
-          'Unable to connect to server'
-      )
+    } catch (err) {
+      console.error('Login error:', err)
+      const msg = typeof err === 'string' ? err : (err.message || 'Unable to connect to Rust backend')
+      setError(msg)
     } finally {
       setLoading(false)
     }

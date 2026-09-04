@@ -4,7 +4,7 @@ const ExecutiveOverview = () => (
   <div className="space-y-6">
     <div>
       <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Executive Overview</h2>
-      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">PRD Pillar 3 — aggregate utilization, focus time metrics, software stack efficiency</p>
+      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Aggregate utilization, focus time metrics, and software stack efficiency</p>
     </div>
 
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">

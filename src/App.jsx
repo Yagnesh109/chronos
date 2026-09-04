@@ -14,7 +14,7 @@ import SessionControlPanel, {
 
 import IdleTimeoutModal from './components/employee/IdleTimeoutModal.jsx'
 
-import Sidebar from './components/shared/Sidebar.jsx'
+import TopNavbar from './components/shared/TopNavbar.jsx'
 
 import AdminDashboard from './components/admin/AdminDashboard.jsx'
 
@@ -294,46 +294,30 @@ export default function App() {
           />
         </>
       ) : (
-        <div className="flex min-h-screen">
-          <Sidebar
+        <div className="min-h-screen flex flex-col">
+          <TopNavbar
             role={role}
             activeSection={activeSection}
             onSelectSection={setActiveSection}
-
             onOpenSettings={() => {
-              if (
-                role === UserRole.ADMIN
-              ) {
-                setActiveSection(
-                  'org-settings'
-                )
+              if (role === UserRole.ADMIN) {
+                setActiveSection('org-settings')
               }
             }}
-
             onToggleDarkMode={toggleDark}
-
             darkMode={dark}
-
             onLogout={handleLogout}
-
-            userName={
-              UserProfile[role].name
-            }
-
-            userEmail={
-              UserProfile[role].email
-            }
+            userName={UserProfile[role].name}
+            userEmail={UserProfile[role].email}
           />
 
-          {role === UserRole.ADMIN ? (
-            <AdminDashboard
-              activeSection={activeSection}
-            />
-          ) : (
-            <ManagerDashboard
-              activeSection={activeSection}
-            />
-          )}
+          <main className="flex-1 max-w-[1500px] w-full mx-auto px-4 sm:px-6 py-6">
+            {role === UserRole.ADMIN ? (
+              <AdminDashboard activeSection={activeSection} />
+            ) : (
+              <ManagerDashboard activeSection={activeSection} />
+            )}
+          </main>
         </div>
       )}
     </div>
