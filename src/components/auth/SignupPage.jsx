@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { invoke } from '@tauri-apps/api/core'
 
 export default function SignupPage({ onSignupSuccess, onGoToLogin }) {
   const [error, setError] = useState('')
@@ -27,29 +28,15 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin }) {
     setLoading(true)
 
     try {
-      const response = await fetch(
-        'http://127.0.0.1:8080/signup',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-          }),
-        }
-      )
+      const data = await invoke('signup', {
+        name,
+        email,
+        password,
+        role: 'employee',
+      })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-          data.error ||
-          'Failed to create account'
-        )
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to create account')
       }
 
       console.log('Signup successful:', data)
@@ -65,12 +52,10 @@ export default function SignupPage({ onSignupSuccess, onGoToLogin }) {
         }
       }, 1000)
 
-    } catch (error) {
-      console.error('Signup error:', error)
-
-      setError(
-        error.message || 'Unable to connect to server'
-      )
+    } catch (err) {
+      console.error('Signup error:', err)
+      const msg = typeof err === 'string' ? err : (err.message || 'Unable to connect to Rust backend')
+      setError(msg)
     } finally {
       setLoading(false)
     }
