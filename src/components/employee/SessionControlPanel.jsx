@@ -63,7 +63,7 @@ const colorMap = {
 
 const policyItems = [
   'Idle detection after 5 minutes without input',
-  'Screenshots every 10 minutes — blurred on your device',
+  'Activity snapshots every 1 minute',
   'Working hours enforced 08:00 – 18:00 (Mon–Fri)',
   'Recorded data syncs every 60 seconds',
 ]

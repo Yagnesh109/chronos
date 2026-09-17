@@ -70,7 +70,6 @@ export default function WeekActivityCard() {
 
         <div className="pt-3 border-t border-surface-light-border dark:border-surface-border flex flex-wrap items-center justify-between gap-2">
           <span className="text-xs text-slate-500 dark:text-slate-400">Daily target 8h · idle time excluded</span>
-          <span className="text-xs text-slate-500 dark:text-slate-400">Exported to payroll every Friday 17:00</span>
         </div>
       </div>
     </div>

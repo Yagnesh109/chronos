@@ -1,7 +1,8 @@
 use argon2::{
-    password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
+    password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
 };
+use rand_core::OsRng;
 use serde::{Deserialize, Serialize};
 use sqlx::Row;
 use tauri::State;
@@ -78,13 +79,13 @@ pub async fn signup(
         .map_err(|e| format!("Password hashing failed: {}", e))?
         .to_string();
 
-    let new_uuid = Uuid::new_v4();
+    let new_uuid_str = Uuid::new_v4().to_string();
 
-    // 1. Try UUID insert with name and role
+    // Insert user record into SQLite users table
     let res1 = sqlx::query(
         "INSERT INTO users (id, name, email, password_hash, role) VALUES ($1, $2, $3, $4, $5)",
     )
-    .bind(new_uuid)
+    .bind(&new_uuid_str)
     .bind(&name_trimmed)
     .bind(&email_trimmed)
     .bind(&password_hash)
@@ -93,8 +94,8 @@ pub async fn signup(
     .await;
 
     if res1.is_err() {
-        // 2. Try SERIAL/Integer auto-increment insert with name and role
-        let res2 = sqlx::query(
+        // Fallback insert without explicit ID column
+        sqlx::query(
             "INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4)",
         )
         .bind(&name_trimmed)
@@ -102,24 +103,13 @@ pub async fn signup(
         .bind(&password_hash)
         .bind(&user_role)
         .execute(&state.db)
-        .await;
-
-        if res2.is_err() {
-            // 3. Minimal fallback insert (SERIAL id, email, password_hash)
-            sqlx::query(
-                "INSERT INTO users (email, password_hash) VALUES ($1, $2)",
-            )
-            .bind(&email_trimmed)
-            .bind(&password_hash)
-            .execute(&state.db)
-            .await
-            .map_err(|e| format!("Failed to create user: {}", e))?;
-        }
+        .await
+        .map_err(|e| format!("Failed to create user: {}", e))?;
     }
 
     Ok(AuthResponse {
         success: true,
-        user_id: Some(new_uuid.to_string()),
+        user_id: Some(new_uuid_str),
         name: Some(name_trimmed),
         email: Some(email_trimmed),
         role: user_role,
@@ -169,13 +159,11 @@ pub async fn login(
         }
     };
 
-    // Safely decode ID regardless of whether SQL column is UUID or INT4 / SERIAL
+    // Safely decode ID
     let id_str: String = row
-        .try_get::<Uuid, _>("id")
-        .map(|u| u.to_string())
+        .try_get::<String, _>("id")
         .or_else(|_| row.try_get::<i32, _>("id").map(|i| i.to_string()))
         .or_else(|_| row.try_get::<i64, _>("id").map(|i| i.to_string()))
-        .or_else(|_| row.try_get::<String, _>("id"))
         .unwrap_or_else(|_| "0".to_string());
 
     let stored_email: String = row.get("email");
